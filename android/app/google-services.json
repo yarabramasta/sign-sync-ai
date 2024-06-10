@@ -12,7 +12,20 @@
           "package_name": "id.ac.ftiunmer.signsyncai"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1063343818537-8bmf0jnog9cqpm4dan0i620i6a27hag0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.ac.ftiunmer.signsyncai",
+            "certificate_hash": "c2c6845ad279724800ac31588946583a99655387"
+          }
+        },
+        {
+          "client_id": "1063343818537-kmric30v1s9emj3nqjldv5g3mbciqpum.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAbE4mjpjjb9DIpjkzAiL8K9bZ7MVBF7y4"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063343818537-kmric30v1s9emj3nqjldv5g3mbciqpum.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1063343818537-sbtqva1aufbk66o077o5lv76qci63npq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "id.ac.ftiunmer.signsyncai"
+              }
+            }
+          ]
         }
       }
     }
