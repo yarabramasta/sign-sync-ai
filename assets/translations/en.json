@@ -3,11 +3,11 @@
   "onboarding_screen": {
     "first_page": {
       "title": "Welcome to SignSyncAI",
-      "microcopy": "Discover a new way of learning and communicating.\n\nOur AI-driven app is designed for students with hearing and speech impairments."
+      "microcopy": "Discover a new way of learning and communicating with AI-driven app that is designed for students with hearing and speech impairments."
     },
     "second_page": {
-      "title": "Empower Your Learning Journey",
-      "microcopy": "Connect effortlessly with your lecturers and peers.\nEnjoy features like AR barcode scanning, speech-to-text, and AI conversation summaries."
+      "title": "Empower Your Learning Journey!",
+      "microcopy": "Enjoy features like AR barcode scanning, speech-to-text, and AI conversation summaries."
     }
   }
 }

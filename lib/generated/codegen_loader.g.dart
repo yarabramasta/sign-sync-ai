@@ -19,11 +19,11 @@ class CodegenLoader extends AssetLoader{
   "onboarding_screen": {
     "first_page": {
       "title": "Welcome to SignSyncAI",
-      "microcopy": "Discover a new way of learning and communicating.\n\nOur AI-driven app is designed for students with hearing and speech impairments."
+      "microcopy": "Discover a new way of learning and communicating with AI-driven app that is designed for students with hearing and speech impairments."
     },
     "second_page": {
-      "title": "Empower Your Learning Journey",
-      "microcopy": "Connect effortlessly with your lecturers and peers.\nEnjoy features like AR barcode scanning, speech-to-text, and AI conversation summaries."
+      "title": "Empower Your Learning Journey!",
+      "microcopy": "Enjoy features like AR barcode scanning, speech-to-text, and AI conversation summaries."
     }
   }
 };
@@ -32,11 +32,11 @@ static const Map<String,dynamic> id = {
   "onboarding_screen": {
     "first_page": {
       "title": "Selamat Datang di SignSyncAI",
-      "microcopy": "Temukan cara baru dalam belajar dan berkomunikasi.\n\nAplikasi kami yang menggunakan teknologi AI ini dirancang untuk siswa dengan keterbatasan pendengaran dan bicara."
+      "microcopy": "Temukan cara baru dalam belajar dan berkomunikasi dengan teknologi AI yang dirancang untuk siswa dengan keterbatasan pendengaran dan bicara."
     },
     "second_page": {
-      "title": "Tingkatkan Perjalanan Belajar Anda",
-      "microcopy": "Terhubung dengan dosen dan teman dengan mudah.\n\nNikmati fitur-fitur seperti pemindaian kode batang AR, konversi ucapan ke teks, dan ringkasan percakapan otomatis."
+      "title": "Tingkatkan Perjalanan Belajar Kamu!",
+      "microcopy": "Nikmati fitur-fitur seperti pemindaian barcode AR, speech-to-text, dan ringkasan chat dengan AI."
     }
   }
 };

@@ -2,6 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+void showL10nBottomSheet(BuildContext context) async {
+  await showModalBottomSheet(
+    context: context,
+    builder: (context) => const L10nRadioBottomSheet(),
+    showDragHandle: true,
+  );
+}
+
 class L10nRadioBottomSheet extends StatelessWidget {
   const L10nRadioBottomSheet({super.key});
 

@@ -57,7 +57,7 @@ class SignSyncAI extends HookConsumerWidget {
     final routerConfig = ref.watch(routerProvider);
     final isDarkMode = useDarkMode().isDarkMode;
 
-    TextTheme textTheme = createTextTheme(context, "Inter", "DM Sans");
+    TextTheme textTheme = createTextTheme(context, 'Inter', 'DM Sans');
     MaterialTheme materialTheme = MaterialTheme(textTheme);
 
     SystemChrome.setSystemUIOverlayStyle(

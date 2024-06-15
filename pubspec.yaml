@@ -31,7 +31,7 @@ dependencies:
   native_toast: ^0.0.2
   phosphor_flutter: ^2.1.0
   riverpod_annotation: ^2.3.5
-  smooth_page_indicator: ^1.1.0
+  websafe_svg: ^3.0.1+1
 
 dev_dependencies:
   flutter_test:

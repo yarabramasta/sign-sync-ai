@@ -4,9 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:signsyncai/constants/sizes.dart';
 import 'package:signsyncai/hooks/use_dark_mode.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:signsyncai/widgets/l10n_radio_bottom_sheet.dart';
+import 'package:websafe_svg/websafe_svg.dart';
 
 class OnboardingScreen extends HookWidget {
   const OnboardingScreen({super.key});
@@ -25,9 +27,9 @@ class OnboardingScreen extends HookWidget {
 
     useEffect(() {
       final timer = Timer.periodic(
-        const Duration(seconds: 3),
+        const Duration(seconds: 10),
         (t) => handlePageChanged(
-          (controller.page ?? controller.initialPage).round(),
+          (controller.page ?? controller.initialPage).round() == 0 ? 1 : 0,
         ),
       );
 
@@ -38,42 +40,64 @@ class OnboardingScreen extends HookWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         scrolledUnderElevation: 0,
+        titleSpacing: Sizes.p16,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            WebsafeSvg.asset('assets/images/signsyncai-icon.svg', width: 24),
+            gapW8,
+            Text(
+              'SignSyncAI',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .copyWith(fontWeight: FontWeight.w600, fontSize: 18),
+            ),
+          ],
+        ),
+        actions: [
+          Image.asset('assets/images/unmer-logo.png', width: 20),
+          gapW8,
+          Image.asset('assets/images/fti-logo.png', width: 18),
+          gapW16,
+          Theme(
+            data: Theme.of(context)
+                .copyWith(visualDensity: VisualDensity.compact),
+            child: OutlinedButton.icon(
+              onPressed: () => showL10nBottomSheet(context),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: Sizes.p4,
+                ),
+              ),
+              icon: const PhosphorIcon(PhosphorIconsDuotone.globe, size: 16),
+              label: Text(
+                context.locale.languageCode.toUpperCase(),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+            ),
+          ),
+          gapW16
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 0,
+        padding: const EdgeInsets.all(Sizes.p16),
         color: Theme.of(context).scaffoldBackgroundColor,
-        child: Padding(
-          padding: const EdgeInsets.all(Sizes.p16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SmoothPageIndicator(
-                controller: controller,
-                count: 2,
-                onDotClicked: handlePageChanged,
-                effect: WormEffect(
-                  dotColor: Theme.of(context).colorScheme.secondaryContainer,
-                  activeDotColor: Theme.of(context).colorScheme.secondary,
-                  dotWidth: 8,
-                  dotHeight: 8,
-                ),
-              ),
-              FilledButton(
-                onPressed: () => handlePageChanged(
-                  (controller.page ?? controller.initialPage).round(),
-                ),
-                child: Text(context.tr("get_started")),
-              ),
-            ],
-          ),
+        child: OutlinedButton(
+          onPressed: () {},
+          child: const Text('Continue with Google'),
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(Sizes.p24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
+            Expanded(
               child: PageView.builder(
                 controller: controller,
                 itemCount: 2,
@@ -94,8 +118,9 @@ class _OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      padding: const EdgeInsets.all(Sizes.p24),
+      shrinkWrap: true,
       children: [
         _OnboardingIllustration(name: index == 0 ? "smart_chat" : "bara"),
         Text(
@@ -104,7 +129,7 @@ class _OnboardingPage extends StatelessWidget {
           ),
           style: Theme.of(context)
               .textTheme
-              .displaySmall
+              .headlineLarge
               ?.copyWith(color: Theme.of(context).colorScheme.primary),
         ),
         gapH16,

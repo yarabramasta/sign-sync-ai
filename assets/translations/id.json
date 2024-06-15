@@ -3,11 +3,11 @@
   "onboarding_screen": {
     "first_page": {
       "title": "Selamat Datang di SignSyncAI",
-      "microcopy": "Temukan cara baru dalam belajar dan berkomunikasi.\n\nAplikasi kami yang menggunakan teknologi AI ini dirancang untuk siswa dengan keterbatasan pendengaran dan bicara."
+      "microcopy": "Temukan cara baru dalam belajar dan berkomunikasi dengan teknologi AI yang dirancang untuk siswa dengan keterbatasan pendengaran dan bicara."
     },
     "second_page": {
-      "title": "Tingkatkan Perjalanan Belajar Anda",
-      "microcopy": "Terhubung dengan dosen dan teman dengan mudah.\n\nNikmati fitur-fitur seperti pemindaian kode batang AR, konversi ucapan ke teks, dan ringkasan percakapan otomatis."
+      "title": "Tingkatkan Perjalanan Belajar Kamu!",
+      "microcopy": "Nikmati fitur-fitur seperti pemindaian barcode AR, speech-to-text, dan ringkasan chat dengan AI."
     }
   }
 }
