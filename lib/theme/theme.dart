@@ -335,17 +335,34 @@ class MaterialTheme {
     return theme(darkHighContrastScheme());
   }
 
-  ThemeData theme(ColorScheme colorScheme) => ThemeData(
-        useMaterial3: true,
-        brightness: colorScheme.brightness,
-        colorScheme: colorScheme,
-        textTheme: textTheme.apply(
-          bodyColor: colorScheme.onSurface,
-          displayColor: colorScheme.onSurface,
+  ThemeData theme(ColorScheme colorScheme) {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: colorScheme.brightness,
+      colorScheme: colorScheme,
+      textTheme: textTheme.apply(
+        bodyColor: colorScheme.onSurface,
+        displayColor: colorScheme.onSurface,
+      ),
+      scaffoldBackgroundColor: colorScheme.surface,
+      canvasColor: colorScheme.surface,
+      appBarTheme: AppBarTheme(
+        backgroundColor: colorScheme.surfaceContainer,
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: colorScheme.secondaryContainer,
+        labelStyle: textTheme.labelSmall!.copyWith(
+          color: colorScheme.secondary,
+          fontWeight: FontWeight.w500,
         ),
-        scaffoldBackgroundColor: colorScheme.surface,
-        canvasColor: colorScheme.surface,
-      );
+        brightness: colorScheme.brightness,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(999),
+          side: BorderSide(color: colorScheme.secondary),
+        ),
+      ),
+    );
+  }
 
   List<ExtendedColor> get extendedColors => [];
 }

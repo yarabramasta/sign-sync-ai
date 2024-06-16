@@ -1,0 +1,13 @@
+{
+  "get_started": "Mulai sekarang",
+  "onboarding_screen": {
+    "first_page": {
+      "title": "Selamat Datang di SignSyncAI",
+      "microcopy": "Temukan cara baru dalam belajar dan berkomunikasi dengan teknologi AI yang dirancang untuk siswa dengan keterbatasan pendengaran dan bicara."
+    },
+    "second_page": {
+      "title": "Tingkatkan Perjalanan Belajar Kamu!",
+      "microcopy": "Nikmati fitur-fitur seperti pemindaian barcode AR, speech-to-text, dan ringkasan chat dengan AI."
+    }
+  }
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1063343818537-sbtqva1aufbk66o077o5lv76qci63npq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1063343818537-sbtqva1aufbk66o077o5lv76qci63npq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDSoZFRXyxqpZIx4T33vinYZ9vjV-af9FU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1063343818537</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>id.ac.ftiunmer.signsyncai</string>
+	<key>PROJECT_ID</key>
+	<string>sign-sync-ai</string>
+	<key>STORAGE_BUCKET</key>
+	<string>sign-sync-ai.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1063343818537:ios:9dd6c6fc57c4d70e44d938</string>
+</dict>
+</plist>

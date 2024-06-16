@@ -1,0 +1,13 @@
+{
+  "get_started": "Get started",
+  "onboarding_screen": {
+    "first_page": {
+      "title": "Welcome to SignSyncAI",
+      "microcopy": "Discover a new way of learning and communicating with AI-driven app that is designed for students with hearing and speech impairments."
+    },
+    "second_page": {
+      "title": "Empower Your Learning Journey!",
+      "microcopy": "Enjoy features like AR barcode scanning, speech-to-text, and AI conversation summaries."
+    }
+  }
+}
