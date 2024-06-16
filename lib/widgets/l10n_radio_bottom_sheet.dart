@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 void showL10nBottomSheet(BuildContext context) async {
   await showModalBottomSheet(
@@ -27,7 +26,7 @@ class L10nRadioBottomSheet extends StatelessWidget {
             title: const Text("Bahasa Indonesia"),
             onChanged: (val) {
               context.setLocale(val ?? const Locale('id'));
-              context.pop();
+              Navigator.of(context).pop();
             },
           ),
           RadioListTile(
@@ -36,7 +35,7 @@ class L10nRadioBottomSheet extends StatelessWidget {
             title: const Text("English"),
             onChanged: (val) {
               context.setLocale(val ?? const Locale('en'));
-              context.pop();
+              Navigator.of(context).pop();
             },
           ),
         ],

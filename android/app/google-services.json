@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "1063343818537-aaqv2kefaavmu4a6ff65eeires5qn0g8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.ac.ftiunmer.signsyncai",
+            "certificate_hash": "93b12fc3ffe8d07f3a2baf1b9abfe76d03a86315"
+          }
+        },
+        {
           "client_id": "1063343818537-kmric30v1s9emj3nqjldv5g3mbciqpum.apps.googleusercontent.com",
           "client_type": 3
         }

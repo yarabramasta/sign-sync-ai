@@ -1,0 +1,6 @@
+flutter_native_splash:
+  color: "#f8f9ff"
+  image: assets/images/signsyncai-logo.png
+  color_dark: "#111418"
+
+  web: false

@@ -7,10 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:signsyncai/generated/codegen_loader.g.dart';
+import 'package:signsyncai/screens/home.dart';
+import 'package:signsyncai/widgets/scaffold_busy.dart';
 
+import 'constants/sizes.dart';
 import 'firebase_options.dart';
 import 'hooks/use_dark_mode.dart';
-import 'providers/router.dart';
+import 'providers/auth.dart';
+import 'screens/onboarding.dart';
 import 'services/kv.dart';
 import 'theme/theme.dart';
 import 'theme/util.dart';
@@ -47,6 +51,7 @@ void main() async {
   );
 }
 
+final navigator = GlobalKey<NavigatorState>();
 final messenger = GlobalKey<ScaffoldMessengerState>();
 
 class SignSyncAI extends HookConsumerWidget {
@@ -54,7 +59,6 @@ class SignSyncAI extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final routerConfig = ref.watch(routerProvider);
     final isDarkMode = useDarkMode().isDarkMode;
 
     TextTheme textTheme = createTextTheme(context, 'Inter', 'DM Sans');
@@ -68,10 +72,11 @@ class SignSyncAI extends HookConsumerWidget {
               .copyWith(statusBarColor: Colors.transparent),
     );
 
-    return MaterialApp.router(
+    final auth = ref.watch(currentUserProvider);
+
+    return MaterialApp(
       title: 'SignSyncAI',
       debugShowCheckedModeBanner: false,
-      routerConfig: routerConfig,
       scaffoldMessengerKey: messenger,
       theme: materialTheme.light(),
       darkTheme: materialTheme.dark(),
@@ -79,6 +84,44 @@ class SignSyncAI extends HookConsumerWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
+      navigatorKey: navigator,
+      home: auth.when(
+        loading: () => const ScaffoldBusy(),
+        error: (error, _) => _AppError(error: error),
+        data: (account) {
+          return account != null
+              ? const HomeScreen()
+              : const OnboardingScreen();
+        },
+      ),
+    );
+  }
+}
+
+class _AppError extends ConsumerWidget {
+  const _AppError({required this.error});
+
+  final Object error;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(Sizes.p24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('$error'),
+            gapH16,
+            OutlinedButton(
+              onPressed: () {
+                ref.invalidate(currentUserProvider);
+              },
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

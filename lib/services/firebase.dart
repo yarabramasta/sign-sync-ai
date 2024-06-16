@@ -1,23 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'firebase.g.dart';
+final db = FirebaseFirestore.instance;
+final auth = FirebaseAuth.instance;
 
-@riverpod
-FirebaseAuth auth(AuthRef ref) {
-  return FirebaseAuth.instanceFor(app: Firebase.app());
-}
-
-@riverpod
-FirebaseFirestore db(DbRef ref) {
-  return FirebaseFirestore.instanceFor(app: Firebase.app());
-}
-
-@riverpod
-GenerativeModel ai(AiRef ref) {
+GenerativeModel ai() {
   const systemPrompt = """
 You are a helpful multilingual assistant that understand English and Bahasa Indonesia.
 
@@ -39,9 +27,8 @@ You can response as effective as possible while keeping the summarization simple
   ];
 
   return FirebaseVertexAI.instanceFor(
-    app: Firebase.app(),
     location: 'asia-southeast1',
-    auth: ref.watch(authProvider),
+    auth: auth,
   ).generativeModel(
     model: "gemini-1.5-flash",
     generationConfig: generationConfig,
