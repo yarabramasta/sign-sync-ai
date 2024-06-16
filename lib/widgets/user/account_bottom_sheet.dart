@@ -25,7 +25,7 @@ class AccountBottomSheet extends ConsumerWidget {
     return Card(
       elevation: 0,
       child: user.when(
-        data: (account) => Column(
+        data: (account) => account != null ? Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             buildAccountTile(context, ref: ref, account: account),
@@ -35,6 +35,13 @@ class AccountBottomSheet extends ConsumerWidget {
             ),
             buildLogoutTile(context, ref),
             gapH24,
+          ],
+        ) : const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: CircularProgressIndicator(),
+            ),
           ],
         ),
         error: (error, _) => Column(
@@ -62,7 +69,7 @@ class AccountBottomSheet extends ConsumerWidget {
 
   ListTile buildAccountTile(
     BuildContext context, {
-    Account? account,
+    required Account account,
     required WidgetRef ref,
   }) {
     return ListTile(
@@ -70,14 +77,14 @@ class AccountBottomSheet extends ConsumerWidget {
       visualDensity: VisualDensity.compact,
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
-          account?.avatar ??
+          account.avatar ??
               'https://api.dicebear.com/8.x/notionists/svg?seed=johndoe',
         ),
       ),
-      title: Text(account?.name ?? ''),
+      title: Text(account.name ?? ''),
       titleTextStyle: Theme.of(context).textTheme.titleMedium,
       subtitle: AutoSizeText(
-        account?.email ?? '',
+        account.email ?? '',
         maxFontSize: 14,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
