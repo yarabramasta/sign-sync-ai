@@ -37,10 +37,11 @@ class AuthService {
         idToken: googleAuth.idToken,
       );
 
-      final user =
-          await auth.signInWithCredential(credential).then((data) => data.user);
+      final user = await auth.signInWithCredential(credential).then((data) => data.user);
+      final snapshot = await Account.col.doc(user?.uid).get();
 
-      // skip user creation if empty && is not a lecturer
+      if (snapshot.exists) return snapshot.data()!;
+      // skip user creation if empty && is a lecturer
       if (user != null && domain != 'unmer.ac.id') {
         final account = Account(
           id: user.uid,
@@ -52,12 +53,8 @@ class AuthService {
         );
 
         await Account.col.doc(user.uid).set(account);
+        return account;
       }
-
-      return await Account.col
-          .doc(user?.uid)
-          .get()
-          .then((snapshot) => snapshot.data()!);
     }
 
     _revoke();
