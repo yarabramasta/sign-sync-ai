@@ -1,3 +1,5 @@
+[![Codemagic build status](https://api.codemagic.io/apps/6663e123fd3c5af8ff2cdcb5/6663e123fd3c5af8ff2cdcb4/status_badge.svg)](https://codemagic.io/app/6663e123fd3c5af8ff2cdcb5/6663e123fd3c5af8ff2cdcb4/latest_build)
+
 # SignSyncAI
 
 SignSyncAI enhances communication for students especially with those hearing and speech disabilities. Effortlessly scan AR barcodes, convert speech to text, and get instant AI-powered conversation summaries.
