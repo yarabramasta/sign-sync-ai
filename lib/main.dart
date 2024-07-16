@@ -4,32 +4,32 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:signsyncai/generated/codegen_loader.g.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:rearch/rearch.dart';
 import 'package:signsyncai/screens/home.dart';
-import 'package:signsyncai/widgets/scaffold_busy.dart';
+import 'package:signsyncai/ui/error_state.dart';
 
-import 'constants/sizes.dart';
+import 'features/auth/presentation/store.dart';
 import 'firebase_options.dart';
-import 'hooks/use_dark_mode.dart';
-import 'providers/auth.dart';
 import 'screens/onboarding.dart';
 import 'services/kv.dart';
-import 'theme/theme.dart';
-import 'theme/util.dart';
+import 'ui/splash.dart';
+import 'ui/theme/theme.dart';
+import 'ui/theme/util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await KV.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
   );
-
-  await KV.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
 
   GoogleFonts.config.allowRuntimeFetching = false;
   LicenseRegistry.addLicense(() async* {
@@ -38,15 +38,12 @@ void main() async {
   });
 
   runApp(
-    ProviderScope(
-      child: EasyLocalization(
-        supportedLocales: const [Locale('en'), Locale('id')],
-        path: 'assets/translations',
-        useOnlyLangCode: true,
-        fallbackLocale: const Locale('en'),
-        assetLoader: const CodegenLoader(),
-        child: const SignSyncAI(),
-      ),
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('id')],
+      path: 'i18n',
+      useOnlyLangCode: true,
+      fallbackLocale: const Locale('id'),
+      child: const SignSyncAI(),
     ),
   );
 }
@@ -54,74 +51,45 @@ void main() async {
 final navigator = GlobalKey<NavigatorState>();
 final messenger = GlobalKey<ScaffoldMessengerState>();
 
-class SignSyncAI extends HookConsumerWidget {
+class SignSyncAI extends RearchConsumer {
   const SignSyncAI({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = useDarkMode().isDarkMode;
+  Widget build(BuildContext context, WidgetHandle use) {
+    final auth = use(account$);
+    final home = use.memo(
+      () => switch (auth) {
+        AsyncLoading() => const Splash(),
+        AsyncError(:final error) => ErrorScaffold(error: error),
+        AsyncData(:final data) =>
+          data != null ? const HomeScreen() : const OnboardingScreen(),
+      },
+      [auth],
+    );
+
+    use.automaticKeepAlive();
 
     TextTheme textTheme = createTextTheme(context, 'Inter', 'DM Sans');
-    MaterialTheme materialTheme = MaterialTheme(textTheme);
+    MaterialTheme theme = MaterialTheme(textTheme);
 
-    SystemChrome.setSystemUIOverlayStyle(
-      isDarkMode
-          ? SystemUiOverlayStyle.light
-              .copyWith(statusBarColor: Colors.transparent)
-          : SystemUiOverlayStyle.dark
-              .copyWith(statusBarColor: Colors.transparent),
-    );
-
-    final auth = ref.watch(currentUserProvider);
-
-    return MaterialApp(
-      title: 'SignSyncAI',
-      debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: messenger,
-      theme: materialTheme.light(),
-      darkTheme: materialTheme.dark(),
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
-      navigatorKey: navigator,
-      home: auth.when(
-        loading: () => const ScaffoldBusy(),
-        error: (error, _) => _AppError(error: error),
-        data: (account) {
-          return account != null
-              ? const HomeScreen()
-              : const OnboardingScreen();
-        },
-      ),
-    );
-  }
-}
-
-class _AppError extends ConsumerWidget {
-  const _AppError({required this.error});
-
-  final Object error;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(Sizes.p24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('$error'),
-            gapH16,
-            OutlinedButton(
-              onPressed: () {
-                ref.invalidate(currentUserProvider);
-              },
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: KV.setting.listenable(keys: ['is_dark_mode']),
+      builder: (context, box, _) {
+        final isDarkMode = (box.get('is_dark_mode') ?? false);
+        return MaterialApp(
+          title: 'Sign Sync AI',
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navigator,
+          scaffoldMessengerKey: messenger,
+          theme: isDarkMode ? theme.dark() : theme.light(),
+          darkTheme: theme.dark(),
+          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          home: home,
+        );
+      },
     );
   }
 }

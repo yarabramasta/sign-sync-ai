@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:lottie/lottie.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:signsyncai/constants/sizes.dart';
-import 'package:signsyncai/hooks/use_dark_mode.dart';
-import 'package:signsyncai/providers/auth.dart';
-import 'package:signsyncai/widgets/l10n_radio_bottom_sheet.dart';
+import 'package:rearch/rearch.dart';
+import 'package:signsyncai/features/auth/presentation/actions.dart';
+import 'package:signsyncai/services/kv.dart';
+import 'package:signsyncai/ui/l10n/l10n_button.dart';
+import 'package:signsyncai/ui/utils/sizes.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
-class OnboardingScreen extends HookConsumerWidget {
+class OnboardingScreen extends RearchConsumer {
   static MaterialPageRoute get route {
     return MaterialPageRoute(
       builder: (context) => const OnboardingScreen(),
@@ -22,66 +21,55 @@ class OnboardingScreen extends HookConsumerWidget {
   const OnboardingScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final controller = usePageController();
+  Widget build(BuildContext context, WidgetHandle use) {
+    final controller = use.pageController();
 
-    final handlePageChanged = useCallback((int page) {
-      controller.animateToPage(
-        page,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeOutExpo,
-      );
-    }, []);
-
-    useEffect(() {
+    use.effect(() {
       final timer = Timer.periodic(
         const Duration(seconds: 10),
-        (t) => handlePageChanged(
+        (t) => controller.animateToPage(
           (controller.page ?? controller.initialPage).round() == 0 ? 1 : 0,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeOutExpo,
         ),
       );
 
       return () => timer.cancel();
-    }, [handlePageChanged]);
+    }, [controller]);
 
     return Scaffold(
       appBar: buildAppBar(context),
-      bottomNavigationBar: buildGoogleAuthButton(context, ref),
-      body: buildBody(controller),
-    );
-  }
-
-  SafeArea buildBody(PageController controller) {
-    return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: controller,
-              itemCount: 2,
-              itemBuilder: (context, index) => _OnboardingPage(index: index),
-            ),
-          )
-        ],
+      bottomNavigationBar: buildGoogleAuthButton(context),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: controller,
+                itemCount: 2,
+                itemBuilder: (context, index) => _OnboardingPage(index: index),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  BottomAppBar buildGoogleAuthButton(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authControllerProvider);
-
+  BottomAppBar buildGoogleAuthButton(BuildContext context) {
     return BottomAppBar(
       elevation: 0,
       padding: const EdgeInsets.all(Sizes.p16),
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: OutlinedButton.icon(
-        onPressed: auth.isLoading || auth.valueOrNull != null
-            ? null
-            : ref.read(authControllerProvider.notifier).signIn,
-        icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
-        label: const Text('Continue with Google'),
-      ),
+      child: RearchBuilder(builder: (context, use) {
+        final (state, signin) = use(signinAction);
+        return OutlinedButton.icon(
+          onPressed: state is AsyncLoading ? null : () => signin(),
+          icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
+          label: const Text('Continue with Google'),
+        );
+      }),
     );
   }
 
@@ -109,28 +97,7 @@ class OnboardingScreen extends HookConsumerWidget {
         gapW8,
         Image.asset('assets/images/fti-logo.png', width: 18),
         gapW16,
-        Theme(
-          data: Theme.of(context).copyWith(
-            visualDensity: VisualDensity.compact,
-          ),
-          child: OutlinedButton.icon(
-            onPressed: () => showL10nBottomSheet(context),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: Sizes.p4,
-              ),
-            ),
-            icon: const PhosphorIcon(PhosphorIconsDuotone.globe, size: 16),
-            label: Text(
-              context.locale.languageCode.toUpperCase(),
-              style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-            ),
-          ),
-        ),
+        const L10nButton(),
         gapW16
       ],
     );
@@ -173,22 +140,21 @@ class _OnboardingPage extends StatelessWidget {
   }
 }
 
-class _OnboardingIllustration extends HookWidget {
+class _OnboardingIllustration extends RearchConsumer {
   const _OnboardingIllustration({required this.name});
 
   final String name;
 
   @override
-  Widget build(BuildContext context) {
-    final isDarkMode = useDarkMode().isDarkMode;
-
-    final buildLottie = useCallback(() {
+  Widget build(BuildContext context, WidgetHandle use) {
+    final isDarkMode = use.memo(() => KV.setting.get("is_dark_mode") ?? false);
+    final buildLottie = use.memo(() {
       return Lottie.asset(
         'assets/lottie/${name}_brightness_${isDarkMode ? "dark" : "light"}.json',
         backgroundLoading: true,
       );
-    }, [isDarkMode, name]);
+    }, [isDarkMode]);
 
-    return buildLottie();
+    return buildLottie;
   }
 }
