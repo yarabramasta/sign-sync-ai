@@ -8,6 +8,7 @@ import 'package:rearch/rearch.dart';
 import 'package:signsyncai/features/auth/presentation/actions.dart';
 import 'package:signsyncai/services/kv.dart';
 import 'package:signsyncai/ui/l10n/l10n_button.dart';
+import 'package:signsyncai/ui/toast.dart';
 import 'package:signsyncai/ui/utils/sizes.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
@@ -62,14 +63,30 @@ class OnboardingScreen extends RearchConsumer {
       elevation: 0,
       padding: const EdgeInsets.all(Sizes.p16),
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: RearchBuilder(builder: (context, use) {
-        final (state, signin) = use(signinAction);
-        return OutlinedButton.icon(
-          onPressed: state is AsyncLoading ? null : () => signin(),
-          icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
-          label: const Text('Continue with Google'),
-        );
-      }),
+      child: RearchBuilder(
+        builder: (context, use) {
+          final (state, signin) = use(signinAction);
+          return OutlinedButton.icon(
+            icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
+            label: const Text('Continue with Google'),
+            onPressed: state is AsyncLoading
+                ? null
+                : () => signin(
+                      onData: (_) {
+                        context.toast
+                            .success(message: 'Welcome to Sign Sync AI!');
+                      },
+                      onError: (ex) {
+                        context.toast.error(
+                          message: ex.code == 'invalid-email'
+                              ? 'Uh oh! Looks like your email is not under our associated school domain.'
+                              : 'Failed to authenticate, please try again...',
+                        );
+                      },
+                    ),
+          );
+        },
+      ),
     );
   }
 
@@ -117,24 +134,20 @@ class _OnboardingPage extends StatelessWidget {
       children: [
         _OnboardingIllustration(name: index == 0 ? "smart_chat" : "bara"),
         Text(
-          context.tr(
-            "onboarding_screen.${index == 0 ? 'first' : 'second'}_page.title",
-          ),
+          "onboarding_screen.${index == 0 ? 'first' : 'second'}_page.title",
           style: Theme.of(context)
               .textTheme
               .headlineLarge
               ?.copyWith(color: Theme.of(context).colorScheme.primary),
-        ),
+        ).tr(),
         gapH16,
         Text(
-          context.tr(
-            "onboarding_screen.${index == 0 ? 'first' : 'second'}_page.microcopy",
-          ),
+          "onboarding_screen.${index == 0 ? 'first' : 'second'}_page.microcopy",
           style: Theme.of(context)
               .textTheme
               .bodyMedium
               ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-        ),
+        ).tr(),
       ],
     );
   }
