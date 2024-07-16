@@ -10,11 +10,14 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rearch/rearch.dart';
 import 'package:signsyncai/screens/home.dart';
 import 'package:signsyncai/ui/error_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:toastification/toastification.dart';
 
 import 'features/auth/presentation/store.dart';
 import 'firebase_options.dart';
 import 'screens/onboarding.dart';
 import 'services/kv.dart';
+import 'ui/network_observer.dart';
 import 'ui/splash.dart';
 import 'ui/theme/theme.dart';
 import 'ui/theme/util.dart';
@@ -43,7 +46,9 @@ void main() async {
       path: 'i18n',
       useOnlyLangCode: true,
       fallbackLocale: const Locale('id'),
-      child: const SignSyncAI(),
+      child: const RearchBootstrapper(
+        child: SignSyncAI(),
+      ),
     ),
   );
 }
@@ -72,24 +77,40 @@ class SignSyncAI extends RearchConsumer {
     TextTheme textTheme = createTextTheme(context, 'Inter', 'DM Sans');
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    return ValueListenableBuilder(
-      valueListenable: KV.setting.listenable(keys: ['is_dark_mode']),
-      builder: (context, box, _) {
-        final isDarkMode = (box.get('is_dark_mode') ?? false);
-        return MaterialApp(
-          title: 'Sign Sync AI',
-          debugShowCheckedModeBanner: false,
-          navigatorKey: navigator,
-          scaffoldMessengerKey: messenger,
-          theme: isDarkMode ? theme.dark() : theme.light(),
-          darkTheme: theme.dark(),
-          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          home: home,
-        );
-      },
+    return ToastificationWrapper(
+      config: const ToastificationConfig(
+        animationDuration: Duration(milliseconds: 750),
+        alignment: Alignment.topCenter,
+      ),
+      child: ValueListenableBuilder(
+        valueListenable: KV.setting.listenable(keys: ['is_dark_mode']),
+        builder: (context, box, _) {
+          final isDarkMode = (box.get('is_dark_mode') ?? false);
+          return SkeletonizerConfig(
+            data: SkeletonizerConfigData(
+              effect: ShimmerEffect(
+                baseColor: isDarkMode
+                    ? theme.dark().colorScheme.surfaceContainerHighest
+                    : theme.light().colorScheme.surfaceContainerHighest,
+              ),
+            ),
+            child: MaterialApp(
+              title: 'Sign Sync AI',
+              debugShowCheckedModeBanner: false,
+              navigatorKey: navigator,
+              scaffoldMessengerKey: messenger,
+              theme: isDarkMode ? theme.dark() : theme.light(),
+              darkTheme: theme.dark(),
+              themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              home: home,
+              builder: (context, child) => NetworkObserver(child: child!),
+            ),
+          );
+        },
+      ),
     );
   }
 }

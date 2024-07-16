@@ -58,34 +58,38 @@ class OnboardingScreen extends RearchConsumer {
     );
   }
 
-  BottomAppBar buildGoogleAuthButton(BuildContext context) {
-    return BottomAppBar(
-      elevation: 0,
-      padding: const EdgeInsets.all(Sizes.p16),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: RearchBuilder(
-        builder: (context, use) {
-          final (state, signin) = use(signinAction);
-          return OutlinedButton.icon(
-            icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
-            label: const Text('Continue with Google'),
-            onPressed: state is AsyncLoading
-                ? null
-                : () => signin(
-                      onData: (_) {
-                        context.toast
-                            .success(message: 'Welcome to Sign Sync AI!');
-                      },
-                      onError: (ex) {
-                        context.toast.error(
-                          message: ex.code == 'invalid-email'
-                              ? 'Uh oh! Looks like your email is not under our associated school domain.'
-                              : 'Failed to authenticate, please try again...',
-                        );
-                      },
-                    ),
-          );
-        },
+  Widget buildGoogleAuthButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Sizes.p24),
+      child: BottomAppBar(
+        elevation: 0,
+        padding: const EdgeInsets.all(Sizes.p16),
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: RearchBuilder(
+          builder: (context, use) {
+            final (state, signin) = use(signinAction);
+            return OutlinedButton.icon(
+              icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
+              label: const Text('Continue with Google'),
+              onPressed: state is AsyncLoading
+                  ? null
+                  : () => signin(
+                        onData: (_) {
+                          context.toast.success(
+                            message: 'Welcome to Sign Sync AI!',
+                          );
+                        },
+                        onError: (ex) {
+                          context.toast.error(
+                            message: ex.code == 'invalid-email'
+                                ? 'Uh oh! Looks like your email is not under our associated school domain.'
+                                : 'Failed to authenticate, please try again...',
+                          );
+                        },
+                      ),
+            );
+          },
+        ),
       ),
     );
   }
