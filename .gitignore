@@ -44,3 +44,7 @@ app.*.map.json
 
 .ignored
 key*
+*.zip
+
+# FVM Version Cache
+.fvm/

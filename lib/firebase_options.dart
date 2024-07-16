@@ -63,6 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1063343818537',
     projectId: 'sign-sync-ai',
     storageBucket: 'sign-sync-ai.appspot.com',
+    androidClientId: '1063343818537-8bmf0jnog9cqpm4dan0i620i6a27hag0.apps.googleusercontent.com',
+    iosClientId: '1063343818537-sbtqva1aufbk66o077o5lv76qci63npq.apps.googleusercontent.com',
     iosBundleId: 'id.ac.ftiunmer.signsyncai',
   );
 

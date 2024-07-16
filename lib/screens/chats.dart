@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:signsyncai/constants/sizes.dart';
+import 'package:signsyncai/ui/utils/sizes.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({super.key});

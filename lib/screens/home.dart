@@ -1,31 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:signsyncai/constants/sizes.dart';
-import 'package:signsyncai/widgets/user/account_bottom_sheet.dart';
+import 'package:rearch/rearch.dart';
+import 'package:signsyncai/features/auth/presentation/widgets/account_bottom_sheet.dart';
+import 'package:signsyncai/ui/utils/sizes.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
 import 'bara.dart';
 import 'chats.dart';
 
-class HomeScreen extends HookWidget {
+class HomeScreen extends RearchConsumer {
   const HomeScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final currentPage = useState(0);
-    final pageCtrl = usePageController(initialPage: currentPage.value);
+  static MaterialPageRoute get route {
+    return MaterialPageRoute(
+      builder: (context) => const HomeScreen(),
+    );
+  }
 
-    useEffect(() {
+  @override
+  Widget build(BuildContext context, WidgetHandle use) {
+    final (currentPage, setCurrentPage) = use.state(0);
+    final pageCtrl = use.pageController(initialPage: currentPage);
+
+    use.effect(() {
       void trackPageChanges() {
         final page = (pageCtrl.page ?? pageCtrl.initialPage).round();
-        if (page != currentPage.value) {
-          currentPage.value = page;
+        if (page != currentPage) {
+          setCurrentPage(page);
         }
       }
 
       pageCtrl.addListener(trackPageChanges);
-
       return () => pageCtrl.removeListener(trackPageChanges);
     }, [pageCtrl, currentPage]);
 
@@ -45,10 +51,6 @@ class HomeScreen extends HookWidget {
             ],
           ),
           actions: [
-            const IconButton(
-              onPressed: null,
-              icon: PhosphorIcon(PhosphorIconsRegular.magnifyingGlass),
-            ),
             IconButton(
               onPressed: () => showAccountBottomSheet(context),
               icon: const PhosphorIcon(PhosphorIconsRegular.dotsThreeVertical),
@@ -58,7 +60,7 @@ class HomeScreen extends HookWidget {
         ),
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: currentPage.value,
+        selectedIndex: currentPage,
         onDestinationSelected: (index) {
           pageCtrl.animateToPage(
             index,

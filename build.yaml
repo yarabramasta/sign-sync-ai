@@ -1,8 +1,13 @@
-# build.yaml
-global_options:
-  freezed:freezed:
-    runs_before:
-      - hive_generator:hive_generator
-  hive_generator:hive_generator:
-    runs_before:
-      - json_serializable:json_serializable
+targets:
+  $default:
+    builders:
+      json_serializable:json_serializable:
+        enabled: true
+        generate_for:
+          include:
+            - lib/features/**/domain/**.dart
+      freezed:freezed:
+        enabled: true
+        generate_for:
+          include:
+            - lib/features/**/domain/**.dart
