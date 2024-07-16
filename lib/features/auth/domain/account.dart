@@ -10,8 +10,7 @@ enum Role { student, lecturer }
 @freezed
 class Account with _$Account {
   const factory Account({
-    required String id,
-    String? code,
+    required String code,
     String? name,
     String? avatar,
     String? email,

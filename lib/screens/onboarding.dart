@@ -8,7 +8,6 @@ import 'package:rearch/rearch.dart';
 import 'package:signsyncai/features/auth/presentation/actions.dart';
 import 'package:signsyncai/services/kv.dart';
 import 'package:signsyncai/ui/l10n/l10n_button.dart';
-import 'package:signsyncai/ui/toast.dart';
 import 'package:signsyncai/ui/utils/sizes.dart';
 import 'package:websafe_svg/websafe_svg.dart';
 
@@ -71,22 +70,7 @@ class OnboardingScreen extends RearchConsumer {
             return OutlinedButton.icon(
               icon: WebsafeSvg.asset('assets/images/google.svg', width: 24),
               label: const Text('Continue with Google'),
-              onPressed: state is AsyncLoading
-                  ? null
-                  : () => signin(
-                        onData: (_) {
-                          context.toast.success(
-                            message: 'Welcome to Sign Sync AI!',
-                          );
-                        },
-                        onError: (ex) {
-                          context.toast.error(
-                            message: ex.code == 'invalid-email'
-                                ? 'Uh oh! Looks like your email is not under our associated school domain.'
-                                : 'Failed to authenticate, please try again...',
-                          );
-                        },
-                      ),
+              onPressed: state is AsyncLoading ? null : () => signin(context),
             );
           },
         ),

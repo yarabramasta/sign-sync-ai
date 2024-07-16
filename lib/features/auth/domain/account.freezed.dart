@@ -20,8 +20,7 @@ Account _$AccountFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Account {
-  String get id => throw _privateConstructorUsedError;
-  String? get code => throw _privateConstructorUsedError;
+  String get code => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
@@ -38,12 +37,7 @@ abstract class $AccountCopyWith<$Res> {
       _$AccountCopyWithImpl<$Res, Account>;
   @useResult
   $Res call(
-      {String id,
-      String? code,
-      String? name,
-      String? avatar,
-      String? email,
-      Role role});
+      {String code, String? name, String? avatar, String? email, Role role});
 }
 
 /// @nodoc
@@ -59,22 +53,17 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? code = freezed,
+    Object? code = null,
     Object? name = freezed,
     Object? avatar = freezed,
     Object? email = freezed,
     Object? role = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: freezed == code
+      code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -103,12 +92,7 @@ abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id,
-      String? code,
-      String? name,
-      String? avatar,
-      String? email,
-      Role role});
+      {String code, String? name, String? avatar, String? email, Role role});
 }
 
 /// @nodoc
@@ -122,22 +106,17 @@ class __$$AccountImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? code = freezed,
+    Object? code = null,
     Object? name = freezed,
     Object? avatar = freezed,
     Object? email = freezed,
     Object? role = null,
   }) {
     return _then(_$AccountImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      code: freezed == code
+      code: null == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -162,8 +141,7 @@ class __$$AccountImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AccountImpl implements _Account {
   const _$AccountImpl(
-      {required this.id,
-      this.code,
+      {required this.code,
       this.name,
       this.avatar,
       this.email,
@@ -173,9 +151,7 @@ class _$AccountImpl implements _Account {
       _$$AccountImplFromJson(json);
 
   @override
-  final String id;
-  @override
-  final String? code;
+  final String code;
   @override
   final String? name;
   @override
@@ -188,7 +164,7 @@ class _$AccountImpl implements _Account {
 
   @override
   String toString() {
-    return 'Account(id: $id, code: $code, name: $name, avatar: $avatar, email: $email, role: $role)';
+    return 'Account(code: $code, name: $name, avatar: $avatar, email: $email, role: $role)';
   }
 
   @override
@@ -196,7 +172,6 @@ class _$AccountImpl implements _Account {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AccountImpl &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.code, code) || other.code == code) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
@@ -206,8 +181,7 @@ class _$AccountImpl implements _Account {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, code, name, avatar, email, role);
+  int get hashCode => Object.hash(runtimeType, code, name, avatar, email, role);
 
   @JsonKey(ignore: true)
   @override
@@ -225,8 +199,7 @@ class _$AccountImpl implements _Account {
 
 abstract class _Account implements Account {
   const factory _Account(
-      {required final String id,
-      final String? code,
+      {required final String code,
       final String? name,
       final String? avatar,
       final String? email,
@@ -235,9 +208,7 @@ abstract class _Account implements Account {
   factory _Account.fromJson(Map<String, dynamic> json) = _$AccountImpl.fromJson;
 
   @override
-  String get id;
-  @override
-  String? get code;
+  String get code;
   @override
   String? get name;
   @override

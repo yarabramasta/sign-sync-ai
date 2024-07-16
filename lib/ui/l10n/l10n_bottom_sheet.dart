@@ -16,10 +16,13 @@ SliverWoltModalSheetPage buildL10nBottomSheet(
   void Function(Locale)? onLocaleChange,
 }) {
   void handleChange(Locale? val) {
-    context.setLocale(val ?? context.deviceLocale);
-    onLocaleChange != null
-        ? onLocaleChange(val ?? context.deviceLocale)
-        : Navigator.pop(context, val);
+    if (val == context.locale) return;
+    if (val != null) {
+      context.setLocale(val);
+      onLocaleChange != null
+          ? onLocaleChange(val)
+          : Navigator.pop(context, val);
+    }
   }
 
   return SliverWoltModalSheetPage(

@@ -72,8 +72,6 @@ class SignSyncAI extends RearchConsumer {
       [auth],
     );
 
-    use.automaticKeepAlive();
-
     TextTheme textTheme = createTextTheme(context, 'Inter', 'DM Sans');
     MaterialTheme theme = MaterialTheme(textTheme);
 

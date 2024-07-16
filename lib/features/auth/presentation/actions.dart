@@ -1,25 +1,39 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:rearch/rearch.dart';
+import 'package:signsyncai/ui/toast.dart';
 
 import '../data/auth_repo.dart';
 import '../domain/account.dart';
 
-Stream<Account?> fetchCurrentUser(CapsuleHandle use) =>
-    use(authRepo).currentUser();
+Stream<Account?> fetchCurrentUser(CapsuleHandle use) {
+  return use(authRepo).currentUser();
+}
 
 SigninMutation signinAction(CapsuleHandle use) {
   final repo = use(authRepo);
   final (:state, :mutate, clear: _) = use.mutation<void>();
 
-  void signin({
-    void Function(Account account)? onData,
-    void Function(FirebaseAuthException error)? onError,
-  }) {
+  void signin(BuildContext context) {
     mutate(
-      repo
-          .signIn()
-          .then((data) => onData != null ? onData(data) : data)
-          .catchError((error) => onError != null ? onError(error) : error),
+      repo.signIn().then(
+        (data) {
+          context.toast.success(message: 'Welcome to Sign Sync AI!');
+        },
+      ).catchError(
+        (ex) {
+          switch (ex.code) {
+            case 'aborted':
+              return;
+            case 'invalid-email':
+              context.toast.error(
+                message:
+                    'Uh oh! Looks like your email is not under our associated school domain.',
+              );
+            default:
+              nativeToast('Failed to authenticate, please try again...');
+          }
+        },
+      ),
     );
   }
 
@@ -28,25 +42,18 @@ SigninMutation signinAction(CapsuleHandle use) {
 
 typedef SigninMutation = (
   AsyncValue<void>?,
-  void Function({
-    void Function(Account)? onData,
-    void Function(FirebaseAuthException)? onError,
-  })
+  void Function(BuildContext context)
 );
 
 SignoutMutation signoutAction(CapsuleHandle use) {
   final repo = use(authRepo);
   final (:state, :mutate, clear: _) = use.mutation<void>();
 
-  void signout({
-    void Function()? onData,
-    void Function(Object error)? onError,
-  }) {
+  void signout(BuildContext context) {
     mutate(
-      repo
-          .signOut()
-          .then((data) => onData ?? data)
-          .catchError((error) => onError != null ? onError(error) : error),
+      repo.signOut().then((_) => Navigator.pop(context)).catchError((_) {
+        nativeToast('Something went wrong. Please try again later...');
+      }),
     );
   }
 
@@ -55,8 +62,5 @@ SignoutMutation signoutAction(CapsuleHandle use) {
 
 typedef SignoutMutation = (
   AsyncValue<void>?,
-  void Function({
-    void Function()? onData,
-    void Function(Object)? onError,
-  })
+  void Function(BuildContext context)
 );

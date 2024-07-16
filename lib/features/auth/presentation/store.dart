@@ -52,7 +52,7 @@ AsyncValue<Account?> account$(CapsuleHandle use) {
   return (
     switch (profile) {
       AsyncData(:final data) =>
-        data != null ? data.avatar ?? url + data.id : null,
+        data != null ? data.avatar ?? url + data.code : null,
       _ => null,
     },
     '${url}johndoe'
