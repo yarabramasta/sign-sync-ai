@@ -6,13 +6,16 @@ final db = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
 
 GenerativeModel ai() {
-  const systemPrompt = """
-You are a helpful multilingual assistant that understand English and Bahasa Indonesia.
+//   const systemPrompt = """
+// You are a helpful multilingual assistant that understand English and Bahasa Indonesia.
 
-Your duty is to summarize conversations between lecturer and students.
-You should be able to summarize based on conversations dominant language.
-You can response as effective as possible while keeping the summarization simple.
-""";
+// Your duty is to summarize conversations between lecturer and students.
+// You should be able to summarize based on conversations dominant language.
+// You can response as effective as possible while keeping the summarization simple.
+// """;
+
+  const systemPrompt =
+      "Anda adalah asisten multibahasa yang membantu merangkum percakapan antara dosen dan mahasiswa. Ringkasan harus sesuai dengan bahasa yang dominan dalam percakapan. Jika percakapan menggunakan bahasa Indonesia, ringkasan juga harus dalam bahasa Indonesia. Jika percakapan menggunakan bahasa Inggris, ringkasan harus dalam bahasa Inggris dan Jika percakapan menggunakan bahasa indonesua, ringkasan harus dalam bentuk bahasa indonesia. gunakan kata ganti subjectnya contoh seperti 'anda dan dosen anda' atau 'you and your lecture'. Usahakan ringkasan yang ringkas, padat, dan efektif.";
 
   final generationConfig = GenerationConfig(
     maxOutputTokens: 512,
