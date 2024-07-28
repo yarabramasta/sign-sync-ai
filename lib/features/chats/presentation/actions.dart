@@ -35,14 +35,26 @@ import 'package:signsyncai/ui/toast.dart';
     final participantsId = participants.values.map((e) => e.code).toList();
     final profile = participants.values.map((e) => e.toJson()).toList();
 
-    final conversation = await repo.createConversation(
-      participantsId,
-      profile,
-    );
+    Conversation? conversation;
+
+    try {
+      conversation = await repo.createConversation(
+        participantsId,
+        profile,
+      );
+    } catch (e) {
+      if (context.mounted) {
+        context.toast.error(
+          autoCloseDuration: const Duration(seconds: 3),
+          message: 'Gagal memulai percakapan!',
+        );
+        return;
+      }
+    }
 
     if (context.mounted) {
       Navigator.of(context)
-          .push(RoomChat.route(conversation, participants['receiver']!));
+          .push(RoomChat.route(conversation!, participants['receiver']!));
     }
   }
 
@@ -51,19 +63,30 @@ import 'package:signsyncai/ui/toast.dart';
 
 (
   AsyncValue<void>?,
-  Function(String, String, String, String),
+  Function(BuildContext, String, String, String, String),
 ) sendMessage(CapsuleHandle use) {
   final repo = use(chatRepo);
   final (:state, :mutate, clear: _) = use.mutation<void>();
 
-  void send(String conversationId, String senderId, String receiverId,
-      String message) {
-    mutate(Future.microtask(() => repo.sendMessage(
+  void send(BuildContext context, String conversationId, String senderId,
+      String receiverId, String message) {
+    mutate(Future.microtask(() async {
+      try {
+        await repo.sendMessage(
           conversationId,
           senderId,
           receiverId,
           message,
-        )));
+        );
+      } catch (e) {
+        if (context.mounted) {
+          context.toast.error(
+            autoCloseDuration: const Duration(seconds: 3),
+            message: 'Gagal mengirim pesan!',
+          );
+        }
+      }
+    }));
   }
 
   return (state, send);
@@ -82,28 +105,41 @@ import 'package:signsyncai/ui/toast.dart';
   return (state, call);
 }
 
-(AsyncValue<void>?, void Function(Conversation conversation, BuildContext ctx))
-    sumaryMessage(CapsuleHandle use) {
+(
+  AsyncValue<void>?,
+  void Function(Conversation conversation, BuildContext ctx),
+) sumaryMessage(CapsuleHandle use) {
   final repo = use(chatRepo);
   final (:state, :mutate, clear: _) = use.mutation<void>();
 
-  void summary(Conversation conversation, BuildContext ctx) async {
-    try {
-      final data = await repo.getHistoryMessage(conversation.id);
-      var content =
-          "data percakapan :\n\n ${data.map((e) => "${DateTime.fromMicrosecondsSinceEpoch(e.sendAt).toString()} ${e.content}").join("\n")}";
-      final generatedSummary =
-          await ai().generateContent([Content.text(content)]);
+  void summary(Conversation conversation, BuildContext ctx) {
+    mutate(Future.microtask(() async {
+      try {
+        final data = await repo.getHistoryMessage(conversation.id);
+        var content =
+            "data percakapan :\n\n ${data.map((e) => "${DateTime.fromMicrosecondsSinceEpoch(e.sendAt).toString()} ${e.content}").join("\n")}";
+        final generatedSummary =
+            await ai().generateContent([Content.text(content)]);
 
-      mutate(repo.saveSummaryMessage(conversation.id, generatedSummary.text!));
-    } on SummarryException catch (e) {
-      if (ctx.mounted) {
-        ctx.toast.info(
-          autoCloseDuration: const Duration(seconds: 3),
-          message: e.message,
-        );
+        repo.saveSummaryMessage(conversation.id, generatedSummary.text!);
+      } on SummarryException catch (e) {
+        if (ctx.mounted) {
+          ctx.toast.info(
+            autoCloseDuration: const Duration(seconds: 3),
+            message: e.message,
+          );
+          return;
+        }
+      } catch (e) {
+        if (ctx.mounted) {
+          ctx.toast.error(
+            autoCloseDuration: const Duration(seconds: 3),
+            message: 'Terjadi kesalahan saat meringkas!',
+          );
+          return;
+        }
       }
-    }
+    }));
   }
 
   return (state, summary);

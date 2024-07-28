@@ -38,7 +38,11 @@ class ListConversation extends StatelessWidget {
                     account.name!,
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  Text(conversation.lastMessage),
+                  Text(
+                    conversation.lastMessage,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),

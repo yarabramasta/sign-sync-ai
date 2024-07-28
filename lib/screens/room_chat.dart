@@ -7,9 +7,10 @@ import 'package:signsyncai/features/auth/presentation/store.dart';
 import 'package:signsyncai/features/chats/data/chat_repository.dart';
 import 'package:signsyncai/features/chats/domain/chat.dart';
 import 'package:signsyncai/features/chats/domain/conversation.dart';
+import 'package:signsyncai/features/chats/presentation/actions.dart';
 import 'package:signsyncai/features/chats/presentation/widget/button_send.dart';
 import 'package:signsyncai/features/chats/presentation/widget/header.dart';
-import 'package:signsyncai/features/chats/presentation/widget/speach_to_text.dart';
+import 'package:signsyncai/features/chats/presentation/widget/speech_to_text.dart';
 import 'package:signsyncai/features/chats/presentation/widget/voice_record.dart';
 import 'package:signsyncai/screens/sumarry.dart';
 
@@ -76,9 +77,11 @@ class RoomChat extends RearchConsumer {
   Widget buildChatUi(Account account) {
     return RearchBuilder(builder: (ctx, use) {
       final repo = use(chatRepo);
+      final (state, send) = use(sendMessage);
 
-      void sendMessage(String message) {
-        repo.sendMessage(
+      void callSendMessage(String message) {
+        send(
+          ctx,
           conversation.id,
           account.code,
           this.account.code,
@@ -90,6 +93,7 @@ class RoomChat extends RearchConsumer {
         stream: repo.getMessages(conversation.id),
         builder: (ctx, snapshot) {
           if (snapshot.hasData) {
+            final color = Theme.of(ctx).colorScheme;
             var messages = mapMessages(snapshot.data as List<Chat>, account);
 
             return DashChat(
@@ -99,11 +103,12 @@ class RoomChat extends RearchConsumer {
                 profileImage: account.avatar!,
               ),
               messageOptions: MessageOptions(
-                currentUserContainerColor:
-                    Theme.of(ctx).colorScheme.primaryContainer,
+                currentUserContainerColor: color.primaryContainer,
                 showTime: true,
-                currentUserTextColor: Theme.of(ctx).colorScheme.primary,
+                currentUserTextColor: color.primary,
                 showOtherUsersAvatar: false,
+                containerColor: color.surfaceContainerHigh,
+                textColor: color.onSurface,
               ),
               inputOptions: InputOptions(
                   alwaysShowSend: true,
@@ -113,11 +118,12 @@ class RoomChat extends RearchConsumer {
                     VoiceRecordButton(onPressed: () async {
                       final result = await showRecordModal(ctx);
                       if (result != null && result.isNotEmpty) {
-                        sendMessage(result);
+                        callSendMessage(result);
                       }
                     }),
                   ]),
-              onSend: (message) => sendMessage(message.text),
+              onSend: (message) =>
+                  state is AsyncLoading ? null : callSendMessage(message.text),
               messages: messages ?? [],
             );
           }

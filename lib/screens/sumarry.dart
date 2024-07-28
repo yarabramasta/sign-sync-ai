@@ -21,7 +21,6 @@ class SummarizerDrawer extends RearchConsumer {
   @override
   Widget build(BuildContext context, WidgetHandle use) {
     final repo = use(chatRepo);
-    final (summary, fetchSumarize) = use(sumaryMessage);
 
     return Drawer(
       width: MediaQuery.of(context).size.width,
@@ -92,44 +91,45 @@ class SummarizerDrawer extends RearchConsumer {
             ),
           ),
           const Spacer(),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHigh,
-            ),
-            child: GestureDetector(
-              onTap: () => fetchSumarize(conversation, context),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(23),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const PhosphorIcon(
-                      PhosphorIconsRegular.magicWand,
-                      color: Colors.white,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 10),
-                    RearchBuilder(builder: (context, use) {
-                      return Text(
-                        summary is AsyncLoading ? 'Generating' : 'Summarize',
-                        style: const TextStyle(
-                          color: Colors.white,
+          RearchBuilder(builder: (context, use) {
+            final (result, fetchSumarize) = use(sumaryMessage);
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHigh,
+              ),
+              child: GestureDetector(
+                onTap: () => fetchSumarize(conversation, context),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(23),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PhosphorIcon(
+                        PhosphorIconsRegular.magicWand,
+                        color: Theme.of(context).colorScheme.surfaceContainer,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        result is AsyncLoading ? 'Generating' : 'Summarize',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.surfaceContainer,
                           fontSize: 14,
                         ),
-                      );
-                    }),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
+            );
+          })
         ],
       ),
     );

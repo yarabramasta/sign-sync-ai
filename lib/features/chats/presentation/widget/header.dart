@@ -14,12 +14,12 @@ class ChatRoomHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0x00ededf4),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back,
-          color: Colors.black,
+          color: Theme.of(context).colorScheme.onSurface,
           size: 25,
         ),
         onPressed: () => Navigator.pop(context),
@@ -35,9 +35,9 @@ class ChatRoomHeader extends StatelessWidget implements PreferredSizeWidget {
             width: MediaQuery.of(context).size.width * 0.45,
             child: Text(
               userName,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.normal,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 16,
               ),
               maxLines: 2,
@@ -48,9 +48,9 @@ class ChatRoomHeader extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          icon: const PhosphorIcon(
+          icon: PhosphorIcon(
             PhosphorIconsDuotone.magicWand,
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),

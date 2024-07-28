@@ -45,6 +45,7 @@ dependencies:
   dash_chat_2: ^0.0.21
   algoliasearch: ^1.18.0
   speech_to_text: ^6.6.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -65,3 +66,4 @@ flutter:
     - i18n/
     - assets/images/
     - assets/lottie/
+    - .env

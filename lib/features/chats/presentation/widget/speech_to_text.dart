@@ -7,7 +7,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 
 Future<String?> showRecordModal(BuildContext context) {
-  final speachClient = SpeechToText();
+  final speechClient = SpeechToText();
 
   return WoltModalSheet.show<String>(
     context: context,
@@ -28,11 +28,11 @@ Future<String?> showRecordModal(BuildContext context) {
                     final (text, setText) = use.state('');
 
                     use.callonce(() {
-                      speachClient.initialize();
+                      speechClient.initialize();
                     });
 
                     void startListening() async {
-                      speachClient.listen(
+                      speechClient.listen(
                         localeId: 'id_ID',
                         onResult: (result) {
                           setText(result.recognizedWords);
@@ -46,7 +46,7 @@ Future<String?> showRecordModal(BuildContext context) {
                         children: [
                           GestureDetector(
                             onLongPressStart: (details) => startListening(),
-                            onLongPressEnd: (details) => speachClient.stop(),
+                            onLongPressEnd: (details) => speechClient.stop(),
                             onTap: text.isEmpty
                                 ? null
                                 : () {
