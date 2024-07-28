@@ -17,7 +17,7 @@ class Summary with _$Summary {
       _$SummaryFromJson(json);
 
   static CollectionReference<Summary> get col {
-    return db.collection("summarries").withConverter(
+    return db.collection("summaries").withConverter(
           fromFirestore: (snapshot, _) => Summary.fromJson(snapshot.data()!),
           toFirestore: (snapshot, _) => snapshot.toJson(),
         );
