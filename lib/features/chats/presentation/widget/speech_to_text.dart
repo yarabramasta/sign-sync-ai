@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:rearch/rearch.dart';
+import 'package:signsyncai/ui/toast.dart';
 import 'package:signsyncai/ui/utils/sizes.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
@@ -32,12 +33,19 @@ Future<String?> showRecordModal(BuildContext context) {
                     });
 
                     void startListening() async {
-                      speechClient.listen(
-                        localeId: 'id_ID',
-                        onResult: (result) {
-                          setText(result.recognizedWords);
-                        },
-                      );
+                      try {
+                        speechClient.listen(
+                          localeId: 'id_ID',
+                          onResult: (result) {
+                            setText(result.recognizedWords);
+                          },
+                        );
+                      } on ListenFailedException catch (e) {
+                        context.toast.error(
+                          message: e.message ?? 'Gagal melakukan record audio',
+                          autoCloseDuration: const Duration(seconds: 3),
+                        );
+                      }
                     }
 
                     return Padding(

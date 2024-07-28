@@ -16,9 +16,9 @@ Future<List<Account>> searchLecture(String? query) async {
     similarQuery: query,
     hitsPerPage: 10,
   );
+
   try {
     var response = await client.searchIndex(request: searchMethodParams);
-    client.dispose();
 
     return response.hits.map((e) {
       final rawData = e.toJson();
