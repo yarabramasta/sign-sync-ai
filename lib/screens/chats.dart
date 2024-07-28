@@ -16,17 +16,23 @@ class ChatsScreen extends RearchConsumer {
   @override
   Widget build(BuildContext context, WidgetHandle use) {
     final repo = use(chatRepo);
+    final (role, _) = use(role$);
 
     return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(Sizes.p16),
-        child: FloatingActionButton(
-          onPressed: () => showSearchLectureBottomSheet(context),
-          backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-          foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
-          child: const PhosphorIcon(PhosphorIconsDuotone.chatTeardropDots),
-        ),
-      ),
+      floatingActionButton: role != 'lecturer'
+          ? Padding(
+              padding: const EdgeInsets.all(Sizes.p16),
+              child: FloatingActionButton(
+                onPressed: () => showSearchLectureBottomSheet(context),
+                backgroundColor:
+                    Theme.of(context).colorScheme.tertiaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.onTertiaryContainer,
+                child:
+                    const PhosphorIcon(PhosphorIconsDuotone.chatTeardropDots),
+              ),
+            )
+          : null,
       body: RearchBuilder(builder: (data, use) {
         final acc = use(account$);
 
@@ -47,7 +53,6 @@ class ChatsScreen extends RearchConsumer {
                   },
                 );
               }
-
               return const Center(child: CircularProgressIndicator());
             },
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class VoiceRecordButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -15,13 +16,13 @@ class VoiceRecordButton extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.blue[100],
+            color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            Icons.mic,
+          child: PhosphorIcon(
+            PhosphorIconsRegular.microphone,
             size: 20,
-            color: Colors.blue[500],
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),

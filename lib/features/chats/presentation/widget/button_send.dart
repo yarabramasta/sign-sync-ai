@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class PaperPlaneButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -14,13 +15,13 @@ class PaperPlaneButton extends StatelessWidget {
         height: 40,
         margin: const EdgeInsets.only(left: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFE5B4),
+          color: Theme.of(context).colorScheme.tertiaryContainer,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(
-          Icons.send,
+        child: PhosphorIcon(
+          PhosphorIconsRegular.paperPlaneTilt,
           size: 20,
-          color: Color(0xFF996633),
+          color: Theme.of(context).colorScheme.tertiary,
         ),
       ),
     );

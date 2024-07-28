@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 class ChatRoomHeader extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
   final String userImageUrl;
-  final GlobalKey<ScaffoldState> drawerController;
 
   const ChatRoomHeader({
     super.key,
     required this.userName,
     required this.userImageUrl,
-    required this.drawerController,
   });
 
   @override
@@ -23,9 +22,7 @@ class ChatRoomHeader extends StatelessWidget implements PreferredSizeWidget {
           color: Colors.black,
           size: 25,
         ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: () => Navigator.pop(context),
       ),
       title: Row(
         children: [
@@ -34,19 +31,27 @@ class ChatRoomHeader extends StatelessWidget implements PreferredSizeWidget {
             radius: 16,
           ),
           const SizedBox(width: 10),
-          Text(
-            userName,
-            style: const TextStyle(
-              fontWeight: FontWeight.normal,
-              color: Colors.black,
-              fontSize: 16,
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.45,
+            child: Text(
+              userName,
+              style: const TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 16,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.attachment, color: Colors.black),
+          icon: const PhosphorIcon(
+            PhosphorIconsDuotone.magicWand,
+            color: Colors.black,
+          ),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
       ],

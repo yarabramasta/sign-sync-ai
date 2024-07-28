@@ -9,15 +9,15 @@ import 'package:signsyncai/features/chats/domain/chat.dart';
 import 'package:signsyncai/features/chats/domain/conversation.dart';
 import 'package:signsyncai/features/chats/presentation/widget/button_send.dart';
 import 'package:signsyncai/features/chats/presentation/widget/header.dart';
+import 'package:signsyncai/features/chats/presentation/widget/speach_to_text.dart';
 import 'package:signsyncai/features/chats/presentation/widget/voice_record.dart';
 import 'package:signsyncai/screens/sumarry.dart';
 
 class RoomChat extends RearchConsumer {
   final Conversation conversation;
   final Account account;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  RoomChat({
+  const RoomChat({
     super.key,
     required this.conversation,
     required this.account,
@@ -39,7 +39,6 @@ class RoomChat extends RearchConsumer {
 
       return Scaffold(
         appBar: ChatRoomHeader(
-          drawerController: _scaffoldKey,
           userName: account.name!,
           userImageUrl: account.avatar!,
         ),
@@ -57,26 +56,35 @@ class RoomChat extends RearchConsumer {
   }
 
   List<ChatMessage>? mapMessages(List<Chat> chats, Account account) {
-    return chats.map((chat) {
-      return ChatMessage(
-        user: account.code == chat.sender
-            ? ChatUser(
-                firstName: account.name!,
-                id: account.code,
-              )
-            : ChatUser(
-                firstName: this.account.name!,
-                id: this.account.code,
-              ),
-        text: chat.content,
-        createdAt: DateTime.fromMicrosecondsSinceEpoch(chat.sendAt),
-      );
-    }).toList();
+    return chats
+        .map((chat) => ChatMessage(
+              user: account.code == chat.sender
+                  ? ChatUser(
+                      firstName: account.name!,
+                      id: account.code,
+                    )
+                  : ChatUser(
+                      firstName: this.account.name!,
+                      id: this.account.code,
+                    ),
+              text: chat.content,
+              createdAt: DateTime.fromMicrosecondsSinceEpoch(chat.sendAt),
+            ))
+        .toList();
   }
 
   Widget buildChatUi(Account account) {
     return RearchBuilder(builder: (ctx, use) {
       final repo = use(chatRepo);
+
+      void sendMessage(String message) {
+        repo.sendMessage(
+          conversation.id,
+          account.code,
+          this.account.code,
+          message,
+        );
+      }
 
       return StreamBuilder(
         stream: repo.getMessages(conversation.id),
@@ -90,10 +98,11 @@ class RoomChat extends RearchConsumer {
                 id: account.code,
                 profileImage: account.avatar!,
               ),
-              messageOptions: const MessageOptions(
-                currentUserContainerColor: Color(0xFFD4E3FF),
+              messageOptions: MessageOptions(
+                currentUserContainerColor:
+                    Theme.of(ctx).colorScheme.primaryContainer,
                 showTime: true,
-                currentUserTextColor: Colors.black,
+                currentUserTextColor: Theme.of(ctx).colorScheme.primary,
                 showOtherUsersAvatar: false,
               ),
               inputOptions: InputOptions(
@@ -101,16 +110,14 @@ class RoomChat extends RearchConsumer {
                   sendButtonBuilder: (send) =>
                       PaperPlaneButton(onPressed: send),
                   leading: [
-                    VoiceRecordButton(onPressed: () {}),
+                    VoiceRecordButton(onPressed: () async {
+                      final result = await showRecordModal(ctx);
+                      if (result != null && result.isNotEmpty) {
+                        sendMessage(result);
+                      }
+                    }),
                   ]),
-              onSend: (message) {
-                repo.sendMessage(
-                  conversation.id,
-                  account.code,
-                  this.account.code,
-                  message.text,
-                );
-              },
+              onSend: (message) => sendMessage(message.text),
               messages: messages ?? [],
             );
           }
