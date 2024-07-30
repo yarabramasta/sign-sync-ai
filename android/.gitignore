@@ -1,4 +1,5 @@
 gradle-wrapper.jar
+*.hprof
 /.gradle
 /captures/
 /gradlew

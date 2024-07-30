@@ -1,10 +1,10 @@
 name: signsyncai
 description: "SignSyncAI enhances communication for students especially with those hearing and speech disabilities. Effortlessly scan AR barcodes, convert speech to text, and get instant AI-powered conversation summaries."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: ">=3.4.3 <4.0.0"
 
 dependencies:
   flutter:
@@ -42,6 +42,10 @@ dependencies:
   toastification: ^2.0.0
   websafe_svg: ^3.0.1+1
   wolt_modal_sheet: ^0.7.1
+  dash_chat_2: ^0.0.21
+  algoliasearch: ^1.18.0
+  speech_to_text: ^6.6.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -62,3 +66,4 @@ flutter:
     - i18n/
     - assets/images/
     - assets/lottie/
+    - .env
