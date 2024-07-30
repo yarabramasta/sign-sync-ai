@@ -26,7 +26,7 @@ import 'ui/theme/util.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env");
+  await dotenv.load();
 
   await KV.ensureInitialized();
   await EasyLocalization.ensureInitialized();
